@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=1.0, maximum-scale=5.0">
+    <title>Make My Nyan - Customize your Nyan Cat!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            
+            --accent-white: #ffffff;
+            --primary-bg: #0a0928;
+            --secondary-bg: #1b1b3f;
+            --accent-pink: #ff3a8c;
+            --accent-yellow: #ffdf5f;
+            --accent-blue: #34ace0;
+            --accent-green: #33d9b2;
+            --accent-orange: #ffb142;
+            --accent-purple: #706fd3;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0c4;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-glow: 0 12px 40px rgba(31, 38, 135, 0.25);
+            --border-radius: 20px;
+            --border-radius-sm: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 50%, var(--primary-bg) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: var(--spacing-md);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-lg) 0;
+        }
+        
+        .main-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
+            margin-bottom: var(--spacing-sm);
+            text-shadow: 4px 4px 0 var(--accent-pink);
+            animation: colorShift 8s infinite;
+            letter-spacing: clamp(1px, 0.5vw, 2px);
+            line-height: 1.2;
+        }
+        
+        @keyframes colorShift {
+            0% { color: var(--accent-yellow); }
+            16% { color: var(--accent-pink); }
+            32% { color: var(--accent-blue); }
+            48% { color: var(--accent-green); }
+            64% { color: var(--accent-orange); }
+            80% { color: var(--accent-purple); }
+            100% { color: var(--accent-yellow); }
+        }
+        
+        .subtitle {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: var(--spacing-lg);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 var(--spacing-sm);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            max-width: 1400px;
+            margin: 0 auto;
+            grid-template-areas: 
+                "preview"
+                "controls"
+                "backgrounds"
+                "accessories";
+        }
+        
+        /* Desktop layout */
+        @media (min-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr 400px;
+                grid-template-areas: 
+                    "preview controls"
+                    "preview backgrounds"
+                    "preview accessories";
+                align-items: start;
+            }
+        }
+        
+        /* Tablet layout */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas: 
+                    "preview preview"
+                    "controls backgrounds"
+                    "accessories accessories";
+                gap: var(--spacing-md);
+            }
+        }
+        
+        .nyan-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: clamp(var(--spacing-md), 4vw, var(--spacing-xl));
+            box-shadow: var(--shadow-glow);
+            transition: var(--transition);
+            grid-area: preview;
+        }
+        
+        /* Desktop sticky behavior */
+        @media (min-width: 1024px) {
+            .nyan-section {
+                position: sticky;
+                top: var(--spacing-lg);
+            }
+        }
+        
+        .nyan-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(31, 38, 135, 0.4);
+        }
+        
+        .nyan-display {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: clamp(300px, 50vw, 400px);
+            margin: 0 auto;
+            border: 3px solid var(--accent-purple);
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(45deg, 
+                rgba(112, 111, 211, 0.05) 0%, 
+                rgba(255, 58, 140, 0.05) 50%, 
+                rgba(52, 172, 224, 0.05) 100%);
+            box-shadow: inset 0 0 30px rgba(112, 111, 211, 0.2);
+            transition: var(--transition);
+        }
+        
+        .nyan-display.highlight {
+            border-color: var(--accent-yellow);
+            box-shadow: 
+                inset 0 0 30px rgba(255, 223, 95, 0.2),
+                0 0 40px rgba(255, 223, 95, 0.3);
+        }
+        
+        .nyan-part {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            image-rendering: pixelated;
+            transition: var(--transition);
+        }
+        
+        .nyan-part.highlight {
+            filter: drop-shadow(0 0 15px var(--accent-white));
+            transform: scale(1.03);
+        }
+        
+        .placeholder {
+            color: var(--text-secondary);
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            padding: var(--spacing-xl);
+            line-height: 1.8;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .controls-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: clamp(var(--spacing-sm), 3vw, var(--spacing-lg));
+            box-shadow: var(--shadow-glow);
+            transition: var(--transition);
+        }
+        
+        #colors-section {
+            grid-area: controls;
+        }
+        
+        #backgrounds-section {
+            grid-area: backgrounds;
+        }
+        
+        #accessories-section {
+            grid-area: accessories;
+        }
+        
+        .controls-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 50px rgba(31, 38, 135, 0.3);
+        }
+        
+        .section-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.8rem, 2vw, 1.1rem);
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--accent-pink);
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+            letter-spacing: clamp(0.5px, 0.2vw, 1px);
+        }
+        
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        /* Mobile optimization for color grid */
+        @media (max-width: 480px) {
+            .color-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--spacing-sm);
+            }
+        }
+        
+        .color-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid transparent;
+            min-height: 120px;
+            justify-content: center;
+        }
+        
+        .color-control:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-purple);
+        }
+        
+        /* Touch-friendly hover states */
+        @media (hover: none) {
+            .color-control:hover {
+                transform: none;
+            }
+            
+            .color-control:active {
+                transform: scale(0.95);
+                background: rgba(255, 255, 255, 0.08);
+                border-color: var(--accent-purple);
+            }
+        }
+        
+        .color-control.active {
+            border-color: var(--accent-yellow);
+            background: rgba(255, 223, 95, 0.1);
+        }
+        
+        .color-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.5rem, 1.5vw, 0.6rem);
+            margin-bottom: var(--spacing-xs);
+            text-align: center;
+            color: var(--text-primary);
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.5px;
+        }
+        
+        .color-input-wrapper {
+            position: relative;
+            width: clamp(50px, 12vw, 70px);
+            height: clamp(50px, 12vw, 70px);
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            touch-action: manipulation;
+        }
+        
+        .color-input-wrapper:hover {
+            border-color: var(--accent-yellow);
+            transform: scale(1.1);
+        }
+        
+        /* Touch-friendly color input */
+        @media (hover: none) {
+            .color-input-wrapper:hover {
+                transform: none;
+            }
+            
+            .color-input-wrapper:active {
+                transform: scale(0.95);
+                border-color: var(--accent-yellow);
+            }
+        }
+        
+        .color-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+            transition: var(--transition);
+            touch-action: manipulation;
+        }
+        
+        .grid-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        /* Mobile optimization for grid sections */
+        @media (max-width: 480px) {
+            .grid-section {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--spacing-sm);
+            }
+        }
+        
+        .grid-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            padding: var(--spacing-sm);
+            background: rgba(255, 255, 255, 0.03);
+            min-height: 140px;
+            touch-action: manipulation;
+        }
+        
+        .grid-control:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Touch-friendly grid controls */
+        @media (hover: none) {
+            .grid-control:hover {
+                transform: none;
+            }
+            
+            .grid-control:active {
+                transform: scale(0.95);
+                background: rgba(255, 255, 255, 0.08);
+            }
+        }
+        
+        .grid-control.active {
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 20px rgba(255, 223, 95, 0.3);
+            background: rgba(255, 223, 95, 0.1);
+        }
+        
+        .grid-thumbnail {
+            width: 100%;
+            height: clamp(80px, 20vw, 100px);
+            object-fit: cover;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: var(--spacing-xs);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        
+        .accessory-thumbnail {
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .grid-label {
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: var(--text-primary);
+            text-align: center;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+        
+        .equipped-accessories {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .equipped-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+            color: var(--accent-green);
+            margin-bottom: var(--spacing-sm);
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        
+        .equipped-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xs);
+            padding: var(--spacing-xs);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            cursor: grab;
+            position: relative;
+        }
+        
+        .equipped-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .order-indicator {
+            background: var(--accent-yellow);
+            color: var(--primary-bg);
+            font-weight: bold;
+            font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+            width: clamp(24px, 6vw, 28px);
+            height: clamp(24px, 6vw, 28px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        .equipped-name {
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: var(--text-primary);
+            font-weight: 500;
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .equipped-color {
+            width: clamp(30px, 8vw, 40px);
+            height: clamp(30px, 8vw, 40px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            touch-action: manipulation;
+        }
+        
+        .equipped-color:hover {
+            border-color: var(--accent-yellow);
+            transform: scale(1.1);
+        }
+
+        .equipped-item:active {
+            cursor: grabbing;
+        }
+        
+        .equipped-item.dragging {
+            opacity: 0.7;
+            box-shadow: 0 0 15px rgba(255, 223, 95, 0.5);
+        }
+        
+        .drag-handle {
+            cursor: grab;
+            padding: 5px;
+            margin-right: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        .equipped-item-placeholder {
+            border: 2px dashed var(--accent-yellow);
+            background: rgba(255, 223, 95, 0.1);
+            height: 50px;
+            margin-bottom: var(--spacing-xs);
+            border-radius: var(--border-radius-sm);
+        }
+        
+        /* Touch-friendly equipped color */
+        @media (hover: none) {
+            .equipped-color:hover {
+                transform: none;
+            }
+            
+            .equipped-color:active {
+                transform: scale(0.9);
+                border-color: var(--accent-yellow);
+            }
+        }
+        
+        .remove-accessory {
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: clamp(0.25rem, 1vw, 0.4rem) clamp(0.5rem, 2vw, 0.8rem);
+            font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            touch-action: manipulation;
+            min-height: 32px;
+        }
+        
+        .remove-accessory:hover {
+            background: #ff1a6b;
+            transform: scale(1.05);
+        }
+        
+        /* Touch-friendly remove button */
+        @media (hover: none) {
+            .remove-accessory:hover {
+                transform: none;
+            }
+            
+            .remove-accessory:active {
+                transform: scale(0.95);
+                background: #ff1a6b;
+            }
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        /* Mobile button optimization */
+        @media (max-width: 480px) {
+            .button-group {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-xs);
+            }
+        }
+        
+        .btn {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            font-weight: 600;
+            padding: clamp(var(--spacing-sm), 3vw, var(--spacing-md));
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            min-height: clamp(44px, 10vw, 56px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Touch-friendly buttons */
+        @media (hover: none) {
+            .btn:hover {
+                transform: none;
+            }
+            
+            .btn:active {
+                transform: scale(0.95);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-pink), #ff6b9d);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent-purple), #8b7ed8);
+            color: var(--text-primary);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-blue), #4fc3f7);
+            color: var(--text-primary);
+        }
+        
+        .status-bar {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--border-radius-sm);
+            padding: var(--spacing-sm);
+            border-left: 4px solid var(--accent-green);
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: var(--accent-green);
+            transition: var(--transition);
+            word-wrap: break-word;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .status-bar.error {
+            border-left-color: var(--accent-pink);
+            color: var(--accent-pink);
+        }
+        
+        .status-bar.success {
+            border-left-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+        
+        .toast {
+            position: fixed;
+            top: var(--spacing-lg);
+            right: var(--spacing-lg);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-glow);
+            transform: translateX(400px);
+            transition: var(--transition);
+            z-index: 1000;
+            max-width: clamp(280px, 80vw, 350px);
+            font-weight: 500;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+        
+        /* Mobile toast positioning */
+        @media (max-width: 480px) {
+            .toast {
+                top: var(--spacing-sm);
+                right: var(--spacing-sm);
+                left: var(--spacing-sm);
+                max-width: none;
+                transform: translateY(-100px);
+            }
+            
+            .toast.show {
+                transform: translateY(0);
+            }
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            border-left: 4px solid var(--accent-green);
+        }
+        
+        .toast.error {
+            border-left: 4px solid var(--accent-pink);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            color: var(--text-secondary);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            line-height: 1.8;
+        }
+        
+        .footer a {
+            color: var(--accent-pink);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            color: var(--accent-yellow);
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: clamp(16px, 4vw, 20px);
+            height: clamp(16px, 4vw, 20px);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--accent-pink);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-purple);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-pink);
+        }
+        
+        /* Additional mobile optimizations */
+        @media (max-width: 480px) {
+            .container {
+                padding: var(--spacing-sm);
+            }
+            
+            .nyan-section,
+            .controls-section {
+                padding: var(--spacing-sm);
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .main-content {
+                gap: var(--spacing-sm);
+            }
+            
+            .header {
+                margin-bottom: var(--spacing-md);
+                padding: var(--spacing-sm) 0;
+            }
+        }
+        
+        /* Very small screens */
+        @media (max-width: 320px) {
+            .color-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .grid-section {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Landscape mobile optimization */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                margin-bottom: var(--spacing-sm);
+                padding: var(--spacing-xs) 0;
+            }
+            
+            .main-title {
+                font-size: clamp(1.2rem, 3vw, 2rem);
+            }
+            
+            .nyan-display {
+                height: clamp(200px, 30vh, 300px);
+            }
+        }
+        
+        /* Focus styles for accessibility */
+        .btn:focus-visible,
+        .color-input:focus-visible,
+        .grid-control:focus-visible {
+            outline: 2px solid var(--accent-yellow);
+            outline-offset: 2px;
+        }
+        
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .controls-section,
+            .nyan-section {
+                border: 2px solid var(--text-primary);
+            }
+            
+            .btn {
+                border: 1px solid var(--text-primary);
+            }
+        }
+        
+        /* Nyan Actions Styles */
+        .nyan-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: center;
+            margin-top: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+        
+        .nyan-actions .btn {
+            flex: 1;
+            max-width: 200px;
+            min-width: 140px;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-glow);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.8);
+            transition: var(--transition);
+        }
+        
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .modal-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            color: var(--accent-pink);
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            border-radius: 50%;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+        
+        .share-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+        
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .share-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .share-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .share-text {
+            flex: 1;
+        }
+        
+        .share-label {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .share-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .copy-link-container {
+            display: flex;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .copy-input {
+            flex: 1;
+            padding: var(--spacing-sm);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .copy-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .copy-btn:hover {
+            background: #2dd4bf;
+        }
+        
+        .copy-btn.copied {
+            background: var(--accent-yellow);
+            color: var(--primary-bg);
+        }
+        
+        /* Mobile modal optimization */
+        @media (max-width: 480px) {
+            .modal {
+                padding: var(--spacing-md);
+                margin: var(--spacing-sm);
+            }
+            
+            .nyan-actions {
+                flex-direction: column;
+            }
+            
+            .nyan-actions .btn {
+                max-width: none;
+            }
+        }
+        
+        /* Footer Links Styles */
+        .footer-links {
+            display: flex;
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-lg);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .link-section {
+            text-align: left;
+        }
+        
+        .link-section h4 {
+            color: var(--accent-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .link-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .link-section li {
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .link-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .link-section a:hover {
+            color: var(--accent-yellow);
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-links {
+                flex-direction: column;
+                gap: var(--spacing-lg);
+                text-align: center;
+            }
+            
+            .link-section {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="main-title">MAKE MY NYAN</h1>
+            <p class="subtitle">Customize your Nyan Cat with your favorite colors and accessories!</p>
+        </header>
+        
+        <main class="main-content">
+            <section class="nyan-section">
+                <div class="nyan-display" id="nyanDisplay">
+                    <div class="placeholder" id="placeholder">
+                        <div class="loading"></div>
+                        <br>Loading Nyan Cat...
+                    </div>
+                    <!-- Nyan Cat layers -->
+                    <div class="nyan-part" id="border" aria-label="Nyan Cat border"></div>
+                    <div class="nyan-part" id="pastry" aria-label="Pop-Tart pastry"></div>
+                    <div class="nyan-part" id="body-color" aria-label="Nyan Cat body"></div>
+                    <div class="nyan-part" id="frosting" aria-label="Pop-Tart frosting"></div>
+                    <div class="nyan-part" id="sprinkles" aria-label="Pop-Tart sprinkles"></div>
+                    <div class="nyan-part" id="cheek" aria-label="Nyan Cat cheeks"></div>
+                    <!-- Multiple accessory layers -->
+                    <div class="nyan-part" id="accessory-flowers" aria-label="Flowers accessory"></div>
+                    <div class="nyan-part" id="accessory-sunglasses" aria-label="Sunglasses accessory"></div>
+                    <div class="nyan-part" id="accessory-roundglasses" aria-label="Round Glasses accessory"></div>
+                    <div class="nyan-part" id="accessory-HAT" aria-label="HAT accessory"></div>
+                    <div class="nyan-part" id="accessory-chain" aria-label="Chain accessory"></div>
+                    <div class="nyan-part" id="accessory-silverchain" aria-label="Silver Chain accessory"></div>
+                    <div class="nyan-part" id="accessory-bag" aria-label="Bag accessory"></div>
+                    <div class="nyan-part" id="accessory-goldenbag" aria-label="Golden Bag accessory"></div>
+                    <div class="nyan-part" id="accessory-horns" aria-label="Horns accessory"></div>
+
+
+                    
+                    <div class="nyan-part" id="accessory-rainbow" aria-label="Rainbow accessory"></div>
+                </div>
+                
+                <!-- Botões de ação abaixo da imagem -->
+                <div class="nyan-actions">
+                    <button id="downloadBtn" class="btn btn-success" aria-label="Download customized Nyan Cat image">
+                        Download
+                    </button>
+                    <button id="shareBtn" class="btn btn-primary" aria-label="Share your Nyan Cat">
+                        Share
+                    </button>
+                </div>
+            </section>
+            
+            <section class="controls-section" id="colors-section">
+                <h2 class="section-title">Colors</h2>
+                
+                <div class="color-grid">
+                    <div class="color-control" data-part="bodyColor">
+                        <label class="color-label" for="bodyColor">BODY</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="bodyColor" class="color-input" value="#555555" aria-label="Nyan Cat body color">
+                        </div>
+                    </div>
+                    
+                    <div class="color-control" data-part="pastryColor">
+                        <label class="color-label" for="pastryColor">PASTRY</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="pastryColor" class="color-input" value="#967045" aria-label="Pop-Tart pastry color">
+                        </div>
+                    </div>
+                    
+                    <div class="color-control" data-part="frostingColor">
+                        <label class="color-label" for="frostingColor">FROSTING</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="frostingColor" class="color-input" value="#825064" aria-label="Pop-Tart frosting color">
+                        </div>
+                    </div>
+                    
+                    <div class="color-control" data-part="sprinklesColor">
+                        <label class="color-label" for="sprinklesColor">SPRINKLES</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="sprinklesColor" class="color-input" value="#C80050" aria-label="Pop-Tart sprinkles color">
+                        </div>
+                    </div>
+                    
+                    <div class="color-control" data-part="cheekColor">
+                        <label class="color-label" for="cheekColor">CHEEKS</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="cheekColor" class="color-input" value="#8C5050" aria-label="Nyan Cat cheeks color">
+                        </div>
+                    </div>
+                    
+                    <div class="color-control" data-part="backgroundColorCustom">
+                        <label class="color-label" for="backgroundColorCustom">BG COLOR</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="backgroundColorCustom" class="color-input" value="#0a0928" aria-label="Background color">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="randomBtn" class="btn btn-primary" aria-label="Apply random colors">
+                         Random Colors
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary" aria-label="Reset to default colors">
+                         Reset Colors
+                    </button>
+                </div>
+                
+                <div class="status-bar" id="statusBar">
+                    Status: Initializing...
+                </div>
+            </section>
+            
+            <section class="controls-section" id="backgrounds-section">
+                <h2 class="section-title">Backgrounds</h2>
+                <div class="grid-section" id="backgroundGrid">
+                    <!-- Background options will be inserted here by JavaScript -->
+                </div>
+            </section>
+            
+            <section class="controls-section" id="accessories-section">
+                <h2 class="section-title">Accessories</h2>
+                <div class="grid-section" id="accessoryGrid">
+                    <!-- Accessory options will be inserted here by JavaScript -->
+                </div>
+                
+                <div class="equipped-accessories" id="equippedAccessories" style="display: none;">
+                    <div class="equipped-title">EQUIPPED ACCESSORIES</div>
+                    <div id="equippedList"></div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>Community driven/parody meme maker</p>
+            <p>Have fun customizing your Nyan Cat!</p>
+            
+            <div class="footer-links">
+                <div class="link-section">
+                    <h4>Community Links:</h4>
+                    <ul>
+                        <li><a href="https://nyancoin.io/" target="_blank" rel="noopener noreferrer">nyancoin.io</a></li>
+                        <li><a href="https://x.com/NyanCatOnBAGS" target="_blank" rel="noopener noreferrer">@NyanCatOnBAGS</a></li>
+                        <li><a href="https://x.com/i/communities/1953928424474771925" target="_blank" rel="noopener noreferrer">X Community</a></li>
+                        <li><a href="https://t.me/NyanOnBAGS" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+                    </ul>
+                </div>
+                
+                <div class="link-section">
+                    <h4>$Nyan Links</h4>
+                    <ul>
+                        <li><a href="https://bags.fm/CMx7yon2cLzHcXqgHsKJhuU3MmME6noWLQk2rAycBAGS" target="_blank" rel="noopener noreferrer">BAGS.fm</a></li>
+                        <li><a href="https://www.mobyscreener.com/solana/CMx7yon2cLzHcXqgHsKJhuU3MmME6noWLQk2rAycBAGS" target="_blank" rel="noopener noreferrer">Moby Screener</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <!-- Modal de Compartilhamento -->
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Share Your Nyan</h3>
+                <button class="modal-close" id="closeModal" aria-label="Close modal">×</button>
+            </div>
+            
+            <div class="share-options">
+                <!-- Compartilhar no X (Twitter) -->
+                <a class="share-option" id="shareTwitter" href="#" target="_blank" rel="noopener noreferrer">
+                    <div class="share-icon">X</div>
+                    <div class="share-text">
+                        <div class="share-label">Share on X</div>
+                        <div class="share-description">Share your Nyan on X (Twitter)</div>
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        
+        // Create stars background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = window.innerWidth < 768 ? 50 : 80; // Fewer stars on mobile
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Update status bar
+        function updateStatus(message, type = 'success') {
+            const statusBar = document.getElementById('statusBar');
+            statusBar.textContent = message;
+            statusBar.className = `status-bar ${type}`;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            
+            const statusBar = document.getElementById('statusBar');
+            const placeholder = document.getElementById('placeholder');
+            const nyanDisplay = document.getElementById("nyanDisplay");
+            const backgroundGrid = document.getElementById("backgroundGrid");
+            const accessoryGrid = document.getElementById("accessoryGrid");
+            const equippedAccessories = document.getElementById("equippedAccessories");
+            const equippedList = document.getElementById("equippedList");
+
+            // Available backgrounds
+            const backgrounds = [
+                { name: "Default", file: "default.png" },
+                { name: "Beach", file: "beach.png" },
+                { name: "City", file: "city.png" },
+                { name: "Color", file: "color.png" },
+                { name: "Lake Mountain", file: "lake-mountain.png" },
+                { name: "Mountain", file: "mountain.png" },
+                { name: "Park", file: "park.png" },
+                { name: "Chart", file: "chart.png" },
+                { name: "No Background", file: "transparent.png" }
+            ];
+
+            // Available accessories
+            const accessories = [
+                { name: "Flowers", file: "flowers.png", id: "flowers", canChangeColor: true },
+                { name: "Round Glasses", file: "roundGlasses.png", id: "roundglasses", canChangeColor: true },
+                { name: "Sunglasses", file: "sunGlasses.png", id: "sunglasses", canChangeColor: true } 
+                ,
+                { name: "HAT", file: "bagsHat.png", id: "HAT", canChangeColor: false } 
+                ,
+                { name: "Chain", file: "chain.png", id: "chain", canChangeColor: false } 
+                ,
+                { name: "Silver Chain", file: "silverChain.png", id: "silverchain", canChangeColor: false } ,
+                { name: "Bag", file: "bag.png", id: "bag", canChangeColor: false } ,
+                { name: "Golden Bag", file: "goldenBag.png", id: "goldenbag", canChangeColor: false }  ,
+                { name: "Horns", file: "horns.png", id: "horns", canChangeColor: true } ,
+                { name: "Rainbow", file: "rainbowTrail.png", id: "rainbow", canChangeColor: false }
+            ];
+
+            let currentBackground = backgrounds[0].file; // Default background
+            let equippedAccessoriesData = {}; // Object to store equipped accessories and their colors
+            let backgroundColorCanvas = null; // For color background
+            
+            // Nyan Cat part elements
+            const nyanParts = {
+                border: document.getElementById('border'),
+                pastry: document.getElementById('pastry'),
+                bodyColor: document.getElementById('body-color'),
+                frosting: document.getElementById('frosting'),
+                sprinkles: document.getElementById('sprinkles'),
+                cheek: document.getElementById('cheek'),
+                'accessory-flowers': document.getElementById('accessory-flowers'),
+                'accessory-sunglasses': document.getElementById('accessory-sunglasses'),
+                'accessory-roundglasses': document.getElementById('accessory-roundglasses'),
+                'accessory-HAT': document.getElementById('accessory-HAT'),
+                'accessory-chain': document.getElementById('accessory-chain')
+                ,
+                'accessory-silverchain': document.getElementById('accessory-silverchain'),
+                'accessory-bag': document.getElementById('accessory-bag'),
+                'accessory-goldenbag': document.getElementById('accessory-goldenbag'),
+                'accessory-horns': document.getElementById('accessory-horns'),
+                'accessory-rainbow': document.getElementById('accessory-rainbow')
+            };
+            
+            // Color inputs
+            const colorInputs = {
+                bodyColor: document.getElementById('bodyColor'),
+                pastryColor: document.getElementById('pastryColor'),
+                frostingColor: document.getElementById('frostingColor'),
+                sprinklesColor: document.getElementById('sprinklesColor'),
+                cheekColor: document.getElementById('cheekColor'),
+                backgroundColorCustom: document.getElementById('backgroundColorCustom')
+            };
+            
+            // Buttons
+            const randomBtn = document.getElementById('randomBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            // Default colors
+            const defaultColors = {
+                bodyColor: '#555555',
+                pastryColor: '#967045',
+                frostingColor: '#825064',
+                sprinklesColor: '#C80050',
+                cheekColor: '#8C5050',
+                backgroundColorCustom: '#0a0928'
+            };
+            
+            // Image cache
+            const originalImages = {};
+            const coloredCanvases = {};
+            
+            // Debounce function for performance optimization
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+            
+            // Create debounced version of applyColorToPart
+            const debouncedApplyColor = debounce(applyColorToPart, 100);
+            
+            // Check if all elements exist
+            let allElementsExist = true;
+            
+            for (const part in nyanParts) {
+                if (!nyanParts[part]) {
+                    console.error(`Element not found: ${part}`);
+                    allElementsExist = false;
+                }
+            }
+            
+            if (!allElementsExist) {
+                updateStatus('Some elements are missing from the page', 'error');
+                return;
+            }
+            
+            // Apply background
+            function applyBackground(backgroundFile) {
+                currentBackground = backgroundFile;
+                
+                // Update active state
+                document.querySelectorAll('.grid-control[data-file]').forEach(control => {
+                    if (control.dataset.file === backgroundFile) {
+                        control.classList.add('active');
+                    } else {
+                        control.classList.remove('active');
+                    }
+                });
+                
+                if (backgroundFile === 'color.png') {
+                    // Create a solid color background
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 500;
+                    canvas.height = 400;
+                    const ctx = canvas.getContext('2d');
+                    
+                    const bgColor = colorInputs.backgroundColorCustom.value;
+                    ctx.fillStyle = bgColor;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    backgroundColorCanvas = canvas;
+                    nyanDisplay.style.backgroundImage = `url(${canvas.toDataURL()})`;
+                    nyanDisplay.style.backgroundSize = 'cover';
+                    nyanDisplay.style.backgroundPosition = 'center';
+                } else {
+                    // Use image background
+                    nyanDisplay.style.backgroundImage = `url(assets/backgrounds/${backgroundFile})`;
+                    nyanDisplay.style.backgroundSize = 'cover';
+                    nyanDisplay.style.backgroundPosition = 'center';
+                    backgroundColorCanvas = null;
+                }
+                
+                updateStatus(`Background changed to ${backgrounds.find(bg => bg.file === backgroundFile)?.name || 'Unknown'}`);
+            }
+
+            function toggleAccessory(accessoryId, accessoryFile) {
+    if (equippedAccessoriesData[accessoryId]) {
+        // Remove accessory
+        delete equippedAccessoriesData[accessoryId];
+        nyanParts[`accessory-${accessoryId}`].style.backgroundImage = '';
+        updateStatus(`${accessories.find(acc => acc.id === accessoryId)?.name} removed`);
+    } else {
+        // Add accessory
+        const accessoryData = accessories.find(acc => acc.id === accessoryId);
+        const defaultColor = '#FF69B4'; // Default pink color
+        
+        equippedAccessoriesData[accessoryId] = {
+            name: accessoryData.name,
+            file: accessoryFile,
+            color: defaultColor,
+            canChangeColor: accessoryData.canChangeColor // Adiciona esta propriedade
+        };
+        
+        // Load and apply the accessory
+        const img = new Image();
+        img.onload = function() {
+            originalImages[`accessory-${accessoryId}`] = img;
+            
+            // Create canvas for this accessory
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            coloredCanvases[`accessory-${accessoryId}`] = canvas;
+            
+            // Aplica cor apenas se o acessório permitir mudança de cor
+            if (accessoryData.canChangeColor) {
+                applyColorToPart(`accessory-${accessoryId}`, defaultColor);
+            } else {
+                // Para o rainbow, usa a imagem original sem aplicar cor
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+                nyanParts[`accessory-${accessoryId}`].style.backgroundImage = `url(${canvas.toDataURL()})`;
+            }
+        };
+        img.onerror = function() {
+            console.error(`Error loading accessory: assets/acessories/${accessoryFile}`);
+            delete equippedAccessoriesData[accessoryId];
+        };
+        img.src = `assets/acessories/${accessoryFile}`;
+    }
+    
+    updateEquippedAccessoriesUI();
+    updateAccessoryButtons();
+}
+
+
+// Update equipped accessories UI
+function updateEquippedAccessoriesUI() {
+    const hasEquipped = Object.keys(equippedAccessoriesData).length > 0;
+    equippedAccessories.style.display = hasEquipped ? 'block' : 'none';
+    
+    equippedList.innerHTML = '';
+    
+    const accessoryIds = Object.keys(equippedAccessoriesData);
+    accessoryIds.forEach((accessoryId, index) => {
+        const data = equippedAccessoriesData[accessoryId];
+        const accessoryData = accessories.find(acc => acc.id === accessoryId);
+        const item = document.createElement('div');
+        item.className = 'equipped-item';
+        item.setAttribute('draggable', 'true');
+        item.dataset.accessoryId = accessoryId;
+        
+        // Adiciona indicador de ordem (1 = mais acima, maior z-index)
+        const orderNumber = index + 1;
+        const orderIndicator = `<span class="order-indicator">${orderNumber}</span>`;
+        
+        // Mostra o seletor de cor apenas para acessórios que podem mudar de cor
+        if (accessoryData.canChangeColor) {
+            item.innerHTML = `
+                ${orderIndicator}
+                <span class="drag-handle">⋮⋮</span>
+                <span class="equipped-name">${data.name}</span>
+                <input type="color" class="equipped-color" value="${data.color}" data-accessory="${accessoryId}">
+                <button class="remove-accessory" data-accessory="${accessoryId}">Remove</button>
+            `;
+        } else {
+            // Para o rainbow, mostra apenas o nome e botão de remover
+            item.innerHTML = `
+                ${orderIndicator}
+                <span class="drag-handle">⋮⋮</span>
+                <span class="equipped-name">${data.name}</span>
+                <button class="remove-accessory" data-accessory="${accessoryId}">Remove</button>
+            `;
+        }
+        
+        equippedList.appendChild(item);
+    });
+    
+    // Add event listeners for color changes and removal (apenas para acessórios que podem mudar de cor)
+    equippedList.querySelectorAll('.equipped-color').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const accessoryId = e.target.dataset.accessory;
+            const color = e.target.value;
+            equippedAccessoriesData[accessoryId].color = color;
+            applyColorToPart(`accessory-${accessoryId}`, color);
+        });
+        
+        input.addEventListener('input', (e) => {
+            const accessoryId = e.target.dataset.accessory;
+            const color = e.target.value;
+            equippedAccessoriesData[accessoryId].color = color;
+            debouncedApplyColor(`accessory-${accessoryId}`, color);
+        });
+    });
+    
+    equippedList.querySelectorAll('.remove-accessory').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const accessoryId = e.target.dataset.accessory;
+            const accessoryData = accessories.find(acc => acc.id === accessoryId);
+            toggleAccessory(accessoryId, accessoryData.file);
+        });
+    });
+    
+    // Atualiza os z-indexes após atualizar a UI
+    updateZIndexes();
+}
+
+let draggedItem = null;
+
+function addDragAndDropListeners() {
+    equippedList.addEventListener('dragstart', (e) => {
+        if (e.target.classList.contains('equipped-item')) {
+            draggedItem = e.target;
+            e.target.classList.add('dragging');
+        }
+    });
+
+    equippedList.addEventListener('dragend', (e) => {
+        if (e.target.classList.contains('equipped-item')) {
+            e.target.classList.remove('dragging');
+            draggedItem = null;
+        }
+    });
+
+    equippedList.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(equippedList, e.clientY);
+        if (draggedItem && afterElement == null) {
+            equippedList.appendChild(draggedItem);
+        } else if (draggedItem) {
+            equippedList.insertBefore(draggedItem, afterElement);
+        }
+    });
+
+    equippedList.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const newOrder = [...equippedList.querySelectorAll('.equipped-item')].map(item => item.dataset.accessoryId);
+        const reorderedAccessories = {};
+        newOrder.forEach(id => {
+            reorderedAccessories[id] = equippedAccessoriesData[id];
+        });
+        equippedAccessoriesData = reorderedAccessories;
+        updateEquippedAccessoriesUI(); // Atualiza a UI completa para mostrar os novos números de ordem
+    });
+}
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.equipped-item:not(.dragging)')];
+
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function updateZIndexes() {
+    const accessoryIds = Object.keys(equippedAccessoriesData);
+    const totalAccessories = accessoryIds.length;
+    
+    accessoryIds.forEach((accessoryId, index) => {
+        // O primeiro item da lista (index 0) deve ter o maior z-index
+        // O último item da lista deve ter o menor z-index
+        const zIndex = 1000 + (totalAccessories - index);
+        nyanParts[`accessory-${accessoryId}`].style.zIndex = zIndex;
+    });
+}   
+
+
+
+            // Update accessory buttons active state
+            function updateAccessoryButtons() {
+                document.querySelectorAll('.grid-control[data-accessory]').forEach(control => {
+                    const accessoryId = control.dataset.accessory;
+                    if (equippedAccessoriesData[accessoryId]) {
+                        control.classList.add('active');
+                    } else {
+                        control.classList.remove('active');
+                    }
+                });
+            }
+
+            // Populate background options
+            function populateBackgrounds() {
+                backgrounds.forEach(bg => {
+                    const control = document.createElement('div');
+                    control.className = 'grid-control';
+                    control.dataset.file = bg.file;
+                    control.innerHTML = `
+                        <img src="assets/backgrounds/${bg.file}" alt="${bg.name}" class="grid-thumbnail">
+                        <span class="grid-label">${bg.name}</span>
+                    `;
+                    control.addEventListener('click', () => {
+                        applyBackground(bg.file);
+                    });
+                    backgroundGrid.appendChild(control);
+                });
+                applyBackground(currentBackground); // Apply default background on load
+            }
+
+            // Populate accessory options
+            function populateAccessories() {
+                accessories.forEach(acc => {
+                    const control = document.createElement('div');
+                    control.className = 'grid-control';
+                    control.dataset.accessory = acc.id;
+                    
+                    control.innerHTML = `
+                        <img src="assets/acessories/${acc.file}" alt="${acc.name}" class="grid-thumbnail accessory-thumbnail">
+                        <span class="grid-label">${acc.name}</span>
+                    `;
+                    
+                    control.addEventListener('click', () => {
+                        toggleAccessory(acc.id, acc.file);
+                    });
+                    accessoryGrid.appendChild(control);
+                });
+            }
+            
+            // Initialize images
+            function initializeImages() {
+                let imagesLoaded = 0;
+                const totalImages = 6; // Only the main Nyan Cat parts
+                
+                const loadOrder = ['border', 'pastry', 'bodyColor', 'frosting', 'sprinkles', 'cheek'];
+                
+                loadOrder.forEach(part => {
+                    const img = new Image();
+                    img.onload = function() {
+                        imagesLoaded++;
+                        originalImages[part] = img;
+                        
+                        // Create canvas for this part
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        coloredCanvases[part] = canvas;
+                        
+                        // Apply default color (only for colorizable parts)
+                        if (part !== 'border') {
+                            let defaultColor;
+                            if (part === 'bodyColor') {
+                                defaultColor = defaultColors.bodyColor;
+                                colorInputs.bodyColor.value = defaultColor;
+                            } else {
+                                const colorKey = part + 'Color';
+                                defaultColor = defaultColors[colorKey];
+                                if (colorInputs[colorKey]) {
+                                    colorInputs[colorKey].value = defaultColor;
+                                }
+                            }
+                            applyColorToPart(part, defaultColor);
+                        } else {
+                            // For border, just draw the original image
+                            const ctx = canvas.getContext('2d');
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.drawImage(img, 0, 0);
+                            nyanParts[part].style.backgroundImage = `url(${canvas.toDataURL()})`;
+                        }
+                        
+                        if (imagesLoaded === totalImages) {
+                            placeholder.style.display = 'none';
+                            updateStatus('All images loaded successfully!');
+                            showToast('Nyan Cat loaded!');
+                        }
+                    };
+                    
+                    img.onerror = function() {
+                        imagesLoaded++;
+                        console.error(`Error loading image: assets/${part}.png`);
+                        updateStatus(`Error: ${part}.png not found`, 'error');
+                        
+                        // Create visual fallback
+                        if (part !== 'border') {
+                            let fallbackColor;
+                            if (part === 'bodyColor') {
+                                fallbackColor = defaultColors.bodyColor;
+                            } else {
+                                fallbackColor = defaultColors[part + 'Color'] || '#ccc';
+                            }
+                            nyanParts[part].style.backgroundColor = fallbackColor;
+                        } else {
+                            nyanParts[part].style.backgroundColor = '#706fd3';
+                        }
+                        nyanParts[part].style.display = 'flex';
+                        nyanParts[part].style.justifyContent = 'center';
+                        nyanParts[part].style.alignItems = 'center';
+                        nyanParts[part].innerHTML = `<div style="font-size: 10px; color: white;">${part}</div>`;
+                        
+                        if (imagesLoaded === totalImages) {
+                            placeholder.style.display = 'none';
+                        }
+                    };
+                    
+                    // Fetch images from assets folder
+                    img.src = `assets/${part}.png`;
+                });
+            }
+            
+            // Apply color to a specific part using canvas
+            function applyColorToPart(part, color) {
+                if (!originalImages[part] || !coloredCanvases[part]) return;
+                
+                const img = originalImages[part];
+                const canvas = coloredCanvases[part];
+                const ctx = canvas.getContext('2d');
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the original image
+                ctx.drawImage(img, 0, 0);
+                
+                // Get image data
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                
+                // Convert hex color to RGB
+                const r = parseInt(color.substring(1, 3), 16);
+                const g = parseInt(color.substring(3, 5), 16);
+                const b = parseInt(color.substring(5, 7), 16);
+                
+                // Apply color to each non-transparent pixel
+                for (let i = 0; i < data.length; i += 4) {
+                    // If the pixel is not transparent
+                    if (data[i + 3] > 0) {
+                        data[i] = r;     // Red
+                        data[i + 1] = g; // Green
+                        data[i + 2] = b; // Blue
+                        // Alpha remains the same
+                    }
+                }
+                
+                // Put the modified image data back
+                ctx.putImageData(imageData, 0, 0);
+                
+                // Update the display
+                nyanParts[part].style.backgroundImage = `url(${canvas.toDataURL()})`;
+            }
+
+            // Apply random colors
+function applyRandomColors() {
+    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'];
+    
+    for (const inputName in colorInputs) {
+        if (inputName !== 'backgroundColorCustom') {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            colorInputs[inputName].value = randomColor;
+            
+            // Apply the color
+            let partName;
+            if (inputName === 'bodyColor') {
+                partName = 'bodyColor';
+            } else {
+                partName = inputName.replace('Color', '');
+            }
+            
+            if (originalImages[partName]) {
+                applyColorToPart(partName, randomColor);
+            }
+        }
+    }
+    
+    // Apply random colors to equipped accessories (apenas os que podem mudar de cor)
+    for (const [accessoryId, data] of Object.entries(equippedAccessoriesData)) {
+        const accessoryData = accessories.find(acc => acc.id === accessoryId);
+        if (accessoryData.canChangeColor) {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            equippedAccessoriesData[accessoryId].color = randomColor;
+            applyColorToPart(`accessory-${accessoryId}`, randomColor);
+        }
+    }
+    
+    updateEquippedAccessoriesUI();
+    showToast('Random colors applied! 🎨');
+}
+
+
+// Reset to default colors
+function resetColors() {
+    for (const inputName in colorInputs) {
+        const defaultColor = defaultColors[inputName];
+        colorInputs[inputName].value = defaultColor;
+        
+        // Apply the color
+        let partName;
+        if (inputName === 'bodyColor') {
+            partName = 'bodyColor';
+        } else if (inputName === 'backgroundColorCustom') {
+            // Update background color if color background is selected
+            if (currentBackground === 'color.png') {
+                applyBackground('color.png');
+            }
+            return;
+        } else {
+            partName = inputName.replace('Color', '');
+        }
+        
+        if (originalImages[partName]) {
+            applyColorToPart(partName, defaultColor);
+        }
+    }
+    
+    // Reset accessory colors (apenas os que podem mudar de cor)
+    for (const [accessoryId, data] of Object.entries(equippedAccessoriesData)) {
+        const accessoryData = accessories.find(acc => acc.id === accessoryId);
+        if (accessoryData.canChangeColor) {
+            const defaultColor = '#FF69B4';
+            equippedAccessoriesData[accessoryId].color = defaultColor;
+            applyColorToPart(`accessory-${accessoryId}`, defaultColor);
+        }
+    }
+    
+    updateEquippedAccessoriesUI();
+    showToast('Colors reset to default!');
+}
+
+
+        async function createCompositeImage() {
+            const compositeCanvas = document.createElement('canvas');
+            const ctx = compositeCanvas.getContext('2d');
+            
+            // Set canvas size to 1000x1000
+            compositeCanvas.width = 1000;
+            compositeCanvas.height = 1000;
+            
+            // First, draw the background if one is selected
+            if (currentBackground) {
+                if (currentBackground === 'color.png' && backgroundColorCanvas) {
+                    // Use the colored background canvas
+                    ctx.drawImage(backgroundColorCanvas, 0, 0, compositeCanvas.width, compositeCanvas.height);
+                } else {
+                    // Load and draw the background image
+                    const backgroundImg = new Image();
+                    await new Promise((resolve) => {
+                        backgroundImg.onload = () => {
+                            ctx.drawImage(backgroundImg, 0, 0, compositeCanvas.width, compositeCanvas.height);
+                            resolve();
+                        };
+                        backgroundImg.onerror = () => {
+                            // If background fails to load, use a solid color
+                            ctx.fillStyle = '#0a0928';
+                            ctx.fillRect(0, 0, compositeCanvas.width, compositeCanvas.height);
+                            resolve();
+                        };
+                        backgroundImg.src = `assets/backgrounds/${currentBackground}`;
+                    });
+                }
+            }
+            
+            // Define the order of layers to draw - base layers first
+            const drawOrder = ["border", "pastry", "bodyColor", "frosting", "sprinkles", "cheek"];
+            
+            // Add equipped accessories in REVERSE order (último da lista primeiro, primeiro da lista por último)
+            // Isso garante que o primeiro item da lista seja desenhado por último e fique por cima
+            const accessoryIds = Object.keys(equippedAccessoriesData);
+            for (let i = accessoryIds.length - 1; i >= 0; i--) {
+                const accessoryId = accessoryIds[i];
+                drawOrder.push(`accessory-${accessoryId}`);
+            }
+            
+            // Draw each layer with proper proportions
+            for (const part of drawOrder) {
+                if (coloredCanvases[part]) {
+                    // Get the original dimensions of this part
+                    const originalWidth = coloredCanvases[part].width;
+                    const originalHeight = coloredCanvases[part].height;
+                    
+                    // Calculate the scale to fit in the canvas while maintaining aspect ratio
+                    const scale = Math.min(
+                        compositeCanvas.width / originalWidth,
+                        compositeCanvas.height / originalHeight
+                    ) * 0.7; // Reduce a bit to have margin
+                    
+                    // Calculate new dimensions maintaining aspect ratio
+                    const newWidth = originalWidth * scale;
+                    const newHeight = originalHeight * scale;
+                    
+                    // Center on canvas
+                    const x = (compositeCanvas.width - newWidth) / 2;
+                    const y = (compositeCanvas.height - newHeight) / 2;
+                    
+                    ctx.drawImage(coloredCanvases[part], x, y, newWidth, newHeight);
+                }
+            }
+            
+            return compositeCanvas;
+        }
+
+
+
+
+
+            // Download function
+            async function downloadNyan() {
+                try {
+                    updateStatus('Generating image...', 'success');
+                    const canvas = await createCompositeImage();
+                    
+                    // Create download link
+                    const link = document.createElement('a');
+                    link.download = 'my-nyan-cat.png';
+                    link.href = canvas.toDataURL();
+                    
+                    // Trigger download
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    updateStatus('Image downloaded successfully!', 'success');
+                    showToast('Your Nyan Cat has been downloaded!');
+                } catch (error) {
+                    console.error('Download error:', error);
+                    updateStatus('Error downloading image', 'error');
+                    showToast('Error downloading image', 'error');
+                }
+            }
+            
+            // Add visual feedback for color controls
+            function addColorControlEffects() {
+                document.querySelectorAll('.color-control').forEach(control => {
+                    const input = control.querySelector('.color-input');
+                    const part = control.dataset.part;
+                    
+                    control.addEventListener('mouseenter', () => {
+                        if (part !== 'backgroundColorCustom') {
+                            const targetPart = part === 'bodyColor' ? 'bodyColor' : part.replace('Color', '');
+                            if (nyanParts[targetPart]) {
+                                nyanParts[targetPart].classList.add('highlight');
+                            }
+                        } else {
+                            nyanDisplay.classList.add('highlight');
+                        }
+                    });
+                    
+                    control.addEventListener('mouseleave', () => {
+                        if (part !== 'backgroundColorCustom') {
+                            const targetPart = part === 'bodyColor' ? 'bodyColor' : part.replace('Color', '');
+                            if (nyanParts[targetPart]) {
+                                nyanParts[targetPart].classList.remove('highlight');
+                            }
+                        } else {
+                            nyanDisplay.classList.remove('highlight');
+                        }
+                    });
+                });
+            }
+            
+            // Add event listeners for color inputs
+            for (const inputName in colorInputs) {
+                const input = colorInputs[inputName];
+                
+                input.addEventListener('change', (e) => {
+                    let partName;
+                    if (inputName === 'bodyColor') {
+                        partName = 'bodyColor';
+                    } else if (inputName === 'backgroundColorCustom') {
+                        if (currentBackground === 'color.png') {
+                            applyBackground('color.png');
+                        }
+                        return;
+                    } else {
+                        partName = inputName.replace('Color', '');
+                    }
+                    
+                    if (originalImages[partName]) {
+                        applyColorToPart(partName, e.target.value);
+                    }
+                });
+                
+                input.addEventListener('input', (e) => {
+                    let partName;
+                    if (inputName === 'bodyColor') {
+                        partName = 'bodyColor';
+                    } else if (inputName === 'backgroundColorCustom') {
+                        if (currentBackground === 'color.png') {
+                            applyBackground('color.png');
+                        }
+                        return;
+                    } else {
+                        partName = inputName.replace('Color', '');
+                    }
+                    
+                    if (originalImages[partName]) {
+                        debouncedApplyColor(partName, e.target.value);
+                    }
+                });
+            }
+            
+            // Event listeners for buttons
+            randomBtn.addEventListener('click', applyRandomColors);
+            resetBtn.addEventListener('click', resetColors);
+            downloadBtn.addEventListener('click', downloadNyan);
+            
+            // Initialize visual effects
+            addColorControlEffects();
+            
+            // Initialize the site
+            initializeImages();
+            populateBackgrounds();
+            populateAccessories();
+            addDragAndDropListeners();
+            
+            // Inicializar funcionalidades de compartilhamento
+            initializeShareModal();
+            
+            // Handle window resize for responsive stars
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    // Recreate stars on significant resize
+                    const starsContainer = document.getElementById('stars');
+                    if (starsContainer) {
+                        starsContainer.innerHTML = '';
+                        createStars();
+                    }
+                }, 250);
+            });
+        });
+        
+        // Mensagens aleatórias para compartilhamento
+        const shareMessages = [
+            "My $Nyan is shining! 🌈🐱\nCreate yours and shine too: nyancoin.io/pp\n\n#Nyan #Crypto",
+            "I can't stop looking at my $Nyan! 😻✨\nMake yours now: nyancoin.io/pp\n\n#Nyan #Crypto",
+            "Nyan level maxed out! 🚀🐾\nBuild yours too: nyancoin.io/pp\n\n$Nyan\n#Nyan #Crypto",
+            "My $Nyan is pure charm! 😺💫\nCreate yours here: nyancoin.io/pp\n\n#Nyan #Crypto"
+        ];
+        
+        // Função para obter mensagem aleatória
+        function getRandomShareMessage() {
+            return shareMessages[Math.floor(Math.random() * shareMessages.length)];
+        }
+        
+        // Inicializar modal de compartilhamento
+        function initializeShareModal() {
+            const shareBtn = document.getElementById('shareBtn');
+            const shareModal = document.getElementById('shareModal');
+            const closeModal = document.getElementById('closeModal');
+            const shareTwitter = document.getElementById('shareTwitter');
+            const shareTelegram = document.getElementById('shareTelegram');
+            
+            // Abrir modal
+            shareBtn.addEventListener('click', () => {
+                shareModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Fechar modal
+            function closeShareModal() {
+                shareModal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+            
+            closeModal.addEventListener('click', closeShareModal);
+            
+            // Fechar modal clicando fora
+            shareModal.addEventListener('click', (e) => {
+                if (e.target === shareModal) {
+                    closeShareModal();
+                }
+            });
+            
+            // Fechar modal com ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && shareModal.classList.contains('show')) {
+                    closeShareModal();
+                }
+            });
+            
+            // Função para gerar imagem e compartilhar
+            async function shareWithImage(platform) {
+                try {
+                    // Gerar a imagem do Nyan Cat
+                    const imageDataUrl = await createCompositeImage();
+                    
+                    // Converter data URL para blob
+                    const response = await fetch(imageDataUrl);
+                    const blob = await response.blob();
+                    
+                    // Criar um arquivo temporário
+                    const file = new File([blob], 'my-nyan.png', { type: 'image/png' });
+                    
+                    // Verificar se o navegador suporta Web Share API
+                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                        const message = getRandomShareMessage();
+                        await navigator.share({
+                            text: message,
+                            files: [file]
+                        });
+                    } else {
+                        // Fallback: abrir URL de compartilhamento sem imagem
+                        const message = getRandomShareMessage();
+                        let shareUrl;
+                        
+                        if (platform === 'twitter') {
+                            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+                        } else if (platform === 'telegram') {
+                            shareUrl = `https://t.me/share/url?text=${encodeURIComponent(message)}`;
+                        }
+                        
+                        window.open(shareUrl, '_blank', 'width=600,height=400');
+                        showToast('Image sharing not supported. Please save and attach manually.');
+                    }
+                } catch (error) {
+                    console.error('Error sharing with image:', error);
+                    // Fallback: compartilhar apenas texto
+                    const message = getRandomShareMessage();
+                    let shareUrl;
+                    
+                    if (platform === 'twitter') {
+                        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+                    } else if (platform === 'telegram') {
+                        shareUrl = `https://t.me/share/url?text=${encodeURIComponent(message)}`;
+                    }
+                    
+                    window.open(shareUrl, '_blank', 'width=600,height=400');
+                    showToast('Sharing text only. Please save image manually.');
+                }
+            }
+            
+            // Compartilhar no X (Twitter)
+            shareTwitter.addEventListener('click', (e) => {
+                e.preventDefault();
+                shareWithImage('twitter');
+            });
+            
+            // Compartilhar no Telegram
+            shareTelegram.addEventListener('click', (e) => {
+                e.preventDefault();
+                shareWithImage('telegram');
+            });
+        }
+    </script>
+</body>
+</html>
+
