@@ -1167,13 +1167,15 @@
                         <div class="loading"></div>
                         <br>Loading Nyan Cat...
                     </div>
-                    <!-- Nyan Cat layers -->
+                    
+                    
                     <div class="nyan-part" id="border" aria-label="Nyan Cat border"></div>
                     <div class="nyan-part" id="pastry" aria-label="Pop-Tart pastry"></div>
                     <div class="nyan-part" id="body-color" aria-label="Nyan Cat body"></div>
                     <div class="nyan-part" id="frosting" aria-label="Pop-Tart frosting"></div>
                     <div class="nyan-part" id="sprinkles" aria-label="Pop-Tart sprinkles"></div>
                     <div class="nyan-part" id="cheek" aria-label="Nyan Cat cheeks"></div>
+
                     <!-- Multiple accessory layers -->
                     <div class="nyan-part" id="accessory-flowers" aria-label="Flowers accessory"></div>
                     <div class="nyan-part" id="accessory-sunglasses" aria-label="Sunglasses accessory"></div>
@@ -1184,10 +1186,23 @@
                     <div class="nyan-part" id="accessory-bag" aria-label="Bag accessory"></div>
                     <div class="nyan-part" id="accessory-goldenbag" aria-label="Golden Bag accessory"></div>
                     <div class="nyan-part" id="accessory-horns" aria-label="Horns accessory"></div>
-
-
-                    
                     <div class="nyan-part" id="accessory-rainbow" aria-label="Rainbow accessory"></div>
+
+                    <!-- Novos acessórios -->
+                    <div class="nyan-part" id="accessory-angel" aria-label="Angel accessory"></div>
+                    <div class="nyan-part" id="accessory-ballon" aria-label="Ballon accessory"></div>
+                    <div class="nyan-part" id="accessory-harrypotter" aria-label="Harry Potter accessory"></div>
+                    <div class="nyan-part" id="accessory-luffyhat" aria-label="Luffy Hat accessory"></div>
+                    <div class="nyan-part" id="accessory-mustache" aria-label="Mustache accessory"></div>
+                    <div class="nyan-part" id="accessory-oculus" aria-label="Oculus accessory"></div>
+                    <div class="nyan-part" id="accessory-plant" aria-label="Plant accessory"></div>
+                    <div class="nyan-part" id="accessory-purpleglasses" aria-label="Purple Glasses accessory"></div>
+                    <div class="nyan-part" id="accessory-redglasses" aria-label="Red Glasses accessory"></div>
+                    <div class="nyan-part" id="accessory-tophat" aria-label="Top Hat accessory"></div>
+                    <div class="nyan-part" id="accessory-usglasses" aria-label="US Glasses accessory"></div>
+                    <div class="nyan-part" id="accessory-ustrail" aria-label="US Trail accessory"></div>
+                    <div class="nyan-part" id="accessory-witchhat" aria-label="Witch Hat accessory"></div>
+                    
                 </div>
                 
                 <!-- Botões de ação abaixo da imagem -->
@@ -1396,18 +1411,31 @@
             const accessories = [
                 { name: "Flowers", file: "flowers.png", id: "flowers", canChangeColor: true },
                 { name: "Round Glasses", file: "roundGlasses.png", id: "roundglasses", canChangeColor: true },
-                { name: "Sunglasses", file: "sunGlasses.png", id: "sunglasses", canChangeColor: true } 
-                ,
-                { name: "HAT", file: "bagsHat.png", id: "HAT", canChangeColor: false } 
-                ,
-                { name: "Chain", file: "chain.png", id: "chain", canChangeColor: false } 
-                ,
-                { name: "Silver Chain", file: "silverChain.png", id: "silverchain", canChangeColor: false } ,
-                { name: "Bag", file: "bag.png", id: "bag", canChangeColor: false } ,
-                { name: "Golden Bag", file: "goldenBag.png", id: "goldenbag", canChangeColor: false }  ,
-                { name: "Horns", file: "horns.png", id: "horns", canChangeColor: true } ,
-                { name: "Rainbow", file: "rainbowTrail.png", id: "rainbow", canChangeColor: false }
+                { name: "Sunglasses", file: "sunGlasses.png", id: "sunglasses", canChangeColor: true },
+                { name: "HAT", file: "bagsHat.png", id: "HAT", canChangeColor: false },
+                { name: "Chain", file: "chain.png", id: "chain", canChangeColor: false },
+                { name: "Silver Chain", file: "silverChain.png", id: "silverchain", canChangeColor: false },
+                { name: "Bag", file: "bag.png", id: "bag", canChangeColor: false },
+                { name: "Golden Bag", file: "goldenBag.png", id: "goldenbag", canChangeColor: false },
+                { name: "Horns", file: "horns.png", id: "horns", canChangeColor: true },
+                { name: "Rainbow", file: "rainbowTrail.png", id: "rainbow", canChangeColor: false },
+
+                // Novos
+                { name: "Angel", file: "angel.png", id: "angel", canChangeColor: false },
+                { name: "Ballon", file: "ballon.png", id: "ballon", canChangeColor: false },
+                { name: "Harry Potter", file: "harryPotter.png", id: "harrypotter", canChangeColor: false },
+                { name: "Luffy Hat", file: "luffyHat.png", id: "luffyhat", canChangeColor: false },
+                { name: "Mustache", file: "mustache.png", id: "mustache", canChangeColor: false },
+                { name: "Oculus", file: "oculus.png", id: "oculus", canChangeColor: false },
+                { name: "Plant", file: "plant.png", id: "plant", canChangeColor: false },
+                { name: "Purple Glasses", file: "purpleGlasses.png", id: "purpleglasses", canChangeColor: false },
+                { name: "Red Glasses", file: "redGlasses.png", id: "redglasses", canChangeColor: false },
+                { name: "Top Hat", file: "topHat.png", id: "tophat", canChangeColor: false },
+                { name: "US Glasses", file: "usGlasses.png", id: "usglasses", canChangeColor: false },
+                { name: "US Trail", file: "usTrail.png", id: "ustrail", canChangeColor: false },
+                { name: "Witch Hat", file: "witchHat.png", id: "witchhat", canChangeColor: false }
             ];
+
 
             let currentBackground = backgrounds[0].file; // Default background
             let equippedAccessoriesData = {}; // Object to store equipped accessories and their colors
@@ -1425,13 +1453,27 @@
                 'accessory-sunglasses': document.getElementById('accessory-sunglasses'),
                 'accessory-roundglasses': document.getElementById('accessory-roundglasses'),
                 'accessory-HAT': document.getElementById('accessory-HAT'),
-                'accessory-chain': document.getElementById('accessory-chain')
-                ,
+                'accessory-chain': document.getElementById('accessory-chain'),
                 'accessory-silverchain': document.getElementById('accessory-silverchain'),
                 'accessory-bag': document.getElementById('accessory-bag'),
                 'accessory-goldenbag': document.getElementById('accessory-goldenbag'),
                 'accessory-horns': document.getElementById('accessory-horns'),
-                'accessory-rainbow': document.getElementById('accessory-rainbow')
+                'accessory-rainbow': document.getElementById('accessory-rainbow'),
+
+                // Novos
+                'accessory-angel': document.getElementById('accessory-angel'),
+                'accessory-ballon': document.getElementById('accessory-ballon'),
+                'accessory-harrypotter': document.getElementById('accessory-harrypotter'),
+                'accessory-luffyhat': document.getElementById('accessory-luffyhat'),
+                'accessory-mustache': document.getElementById('accessory-mustache'),
+                'accessory-oculus': document.getElementById('accessory-oculus'),
+                'accessory-plant': document.getElementById('accessory-plant'),
+                'accessory-purpleglasses': document.getElementById('accessory-purpleglasses'),
+                'accessory-redglasses': document.getElementById('accessory-redglasses'),
+                'accessory-tophat': document.getElementById('accessory-tophat'),
+                'accessory-usglasses': document.getElementById('accessory-usglasses'),
+                'accessory-ustrail': document.getElementById('accessory-ustrail'),
+                'accessory-witchhat': document.getElementById('accessory-witchhat')
             };
             
             // Color inputs
